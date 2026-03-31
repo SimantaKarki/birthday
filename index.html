@@ -15,8 +15,6 @@
       --choco:   #7b3f2b;
       --pink:    #e8648a;
       --lavender:#d9b8f0;
-      --mint:    #b8efd8;
-      --yellow:  #ffeaa0;
     }
 
     html, body {
@@ -26,7 +24,6 @@
       overflow-x: hidden;
     }
 
-    /* ── Canvas for petals ── */
     #petal-canvas {
       position: fixed;
       inset: 0;
@@ -34,18 +31,6 @@
       z-index: 0;
     }
 
-    /* ── Main wrapper ── */
-    .page {
-      position: relative;
-      z-index: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 60px 20px 80px;
-      gap: 36px;
-    }
-
-    /* ── Floating stars background dots ── */
     .stars {
       position: fixed;
       inset: 0;
@@ -64,7 +49,22 @@
       to   { opacity: 0.8; transform: scale(1.3); }
     }
 
-    /* ── Header card ── */
+    .page {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 60px 20px 80px;
+      gap: 36px;
+    }
+
+    @keyframes floatUp {
+      from { opacity:0; transform: translateY(40px) scale(0.96); }
+      to   { opacity:1; transform: translateY(0) scale(1); }
+    }
+
+    /* ── Header ── */
     .header-card {
       background: rgba(255,255,255,0.75);
       backdrop-filter: blur(12px);
@@ -74,12 +74,8 @@
       text-align: center;
       max-width: 560px;
       width: 100%;
-      box-shadow: 0 8px 40px rgba(232,100,138,0.12), 0 2px 8px rgba(0,0,0,0.04);
+      box-shadow: 0 8px 40px rgba(232,100,138,0.12);
       animation: floatUp 0.9s cubic-bezier(.22,1,.36,1) both;
-    }
-    @keyframes floatUp {
-      from { opacity:0; transform: translateY(40px) scale(0.96); }
-      to   { opacity:1; transform: translateY(0) scale(1); }
     }
 
     .emoji-row {
@@ -112,32 +108,149 @@
       margin-top: 4px;
     }
 
+    /* ── Envelope ── */
+    .envelope-section {
+      max-width: 560px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+      animation: floatUp 0.9s 0.2s cubic-bezier(.22,1,.36,1) both;
+    }
+
+    .envelope-wrap {
+      width: 100%;
+      max-width: 380px;
+      position: relative;
+      cursor: pointer;
+      transition: transform 0.3s;
+    }
+    .envelope-wrap:hover { transform: scale(1.03); }
+
+    /* The SVG envelope */
+    .env-svg { width: 100%; display: block; }
+
+    /* Letter that peeks up */
+    .env-letter-peek {
+      position: absolute;
+      left: 15%; right: 15%;
+      bottom: 12%;
+      height: 50%;
+      background: #fff8f0;
+      border-radius: 6px;
+      border: 1.5px solid #f4b8d0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+      z-index: 1;
+      transform: translateY(0px);
+      transition: transform 0.8s 0.4s cubic-bezier(.22,1,.36,1);
+    }
+    .envelope-wrap.open .env-letter-peek {
+      transform: translateY(-80%);
+    }
+
+    /* Flap rotation */
+    .env-flap-group {
+      transform-origin: 50% 0%;
+      transition: transform 0.7s cubic-bezier(.4,0,.2,1);
+    }
+    .envelope-wrap.open .env-flap-group {
+      transform: rotateX(180deg) scaleY(-1);
+    }
+
+    /* Seal */
+    .env-seal {
+      position: absolute;
+      top: 44%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 40px; height: 40px;
+      background: var(--pink);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.2rem;
+      z-index: 4;
+      box-shadow: 0 2px 10px rgba(232,100,138,0.35);
+      transition: opacity 0.3s 0.1s, transform 0.3s 0.1s;
+      cursor: pointer;
+    }
+    .envelope-wrap.open .env-seal {
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0);
+    }
+
+    /* Open button */
+    .open-btn {
+      margin-top: 28px;
+      padding: 14px 44px;
+      border-radius: 999px;
+      border: none;
+      background: linear-gradient(135deg, var(--pink), #c45c9e);
+      color: #fff;
+      font-family: 'Quicksand', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(232,100,138,0.35);
+      transition: transform 0.2s, box-shadow 0.2s;
+      animation: pulsebtn 2s ease-in-out infinite;
+    }
+    .open-btn:hover {
+      transform: scale(1.06);
+      box-shadow: 0 8px 28px rgba(232,100,138,0.5);
+    }
+    @keyframes pulsebtn {
+      0%,100% { box-shadow: 0 4px 20px rgba(232,100,138,0.35); }
+      50%      { box-shadow: 0 4px 36px rgba(232,100,138,0.65); }
+    }
+    .open-btn.hidden { display: none; }
+
     /* ── Message card ── */
     .message-card {
-      background: rgba(255,255,255,0.8);
+      background: rgba(255,255,255,0.88);
       backdrop-filter: blur(10px);
       border: 2px solid rgba(217,184,240,0.5);
       border-radius: 28px;
       padding: 36px 40px;
       max-width: 560px;
       width: 100%;
-      text-align: center;
+      text-align: left;
       box-shadow: 0 6px 30px rgba(180,120,220,0.10);
-      animation: floatUp 0.9s 0.2s cubic-bezier(.22,1,.36,1) both;
+      display: none;
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    .message-card.show {
+      opacity: 1;
+      transform: translateY(0);
     }
 
     .message-card p {
-      font-size: 1.08rem;
-      line-height: 1.85;
+      font-size: 1.04rem;
+      line-height: 1.95;
       color: #5a3060;
       font-weight: 500;
+    }
+
+    .poem {
+      font-size: 1rem;
+      line-height: 2.1;
+      color: #7b3f6e;
+      font-weight: 600;
+      font-style: italic;
+      text-align: center !important;
     }
 
     .heart-divider {
       color: var(--pink);
       font-size: 1.4rem;
       letter-spacing: 8px;
-      margin: 14px 0;
+      margin: 20px 0;
+      text-align: center;
       animation: pulse 1.6s ease-in-out infinite;
     }
     @keyframes pulse {
@@ -145,43 +258,7 @@
       50%      { transform: scale(1.18); }
     }
 
-    /* ── Gift icons row ── */
-    .gifts-row {
-      display: flex;
-      gap: 18px;
-      flex-wrap: wrap;
-      justify-content: center;
-      animation: floatUp 0.9s 0.35s cubic-bezier(.22,1,.36,1) both;
-    }
-
-    .gift-bubble {
-      background: rgba(255,255,255,0.82);
-      border: 2px solid rgba(249,168,201,0.45);
-      border-radius: 24px;
-      padding: 22px 26px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 8px;
-      min-width: 110px;
-      box-shadow: 0 4px 18px rgba(232,100,138,0.10);
-      transition: transform 0.25s, box-shadow 0.25s;
-      cursor: default;
-    }
-    .gift-bubble:hover {
-      transform: translateY(-6px) rotate(-2deg);
-      box-shadow: 0 10px 28px rgba(232,100,138,0.18);
-    }
-    .gift-bubble .icon { font-size: 2.4rem; }
-    .gift-bubble .label {
-      font-size: 0.78rem;
-      font-weight: 700;
-      color: #b05080;
-      text-transform: uppercase;
-      letter-spacing: 0.8px;
-    }
-
-    /* ── Cake section ── */
+    /* ── Cake ── */
     .cake-section {
       display: flex;
       flex-direction: column;
@@ -189,7 +266,6 @@
       gap: 10px;
       animation: floatUp 0.9s 0.5s cubic-bezier(.22,1,.36,1) both;
     }
-
     .cake-emoji {
       font-size: 5.5rem;
       filter: drop-shadow(0 6px 18px rgba(232,100,138,0.25));
@@ -199,7 +275,6 @@
       0%,100% { transform: translateY(0) rotate(-2deg); }
       50%      { transform: translateY(-12px) rotate(2deg); }
     }
-
     .cake-label {
       font-family: 'Pacifico', cursive;
       font-size: 1.15rem;
@@ -207,29 +282,6 @@
       opacity: 0.75;
     }
 
-    /* ── Wish bubbles ── */
-    .wishes {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      justify-content: center;
-      max-width: 560px;
-      animation: floatUp 0.9s 0.6s cubic-bezier(.22,1,.36,1) both;
-    }
-
-    .wish-tag {
-      background: linear-gradient(135deg, var(--rose), var(--peach));
-      border-radius: 999px;
-      padding: 8px 20px;
-      font-size: 0.88rem;
-      font-weight: 700;
-      color: #7b2d55;
-      box-shadow: 0 3px 12px rgba(232,100,138,0.18);
-      transition: transform 0.2s;
-    }
-    .wish-tag:hover { transform: scale(1.07) rotate(-1deg); }
-
-    /* ── Footer ── */
     .footer {
       font-size: 0.85rem;
       color: #c090b0;
@@ -238,20 +290,16 @@
       animation: floatUp 0.9s 0.75s cubic-bezier(.22,1,.36,1) both;
     }
 
-    /* ── Responsive ── */
     @media (max-width: 480px) {
-      .header-card, .message-card { padding: 28px 22px; }
-      .gifts-row { gap: 12px; }
-      .gift-bubble { min-width: 90px; padding: 16px 18px; }
+      .header-card { padding: 28px 22px; }
+      .message-card { padding: 24px 18px; }
+      .message-card p { font-size: 0.95rem; }
     }
   </style>
 </head>
 <body>
 
-<!-- Starfield -->
 <div class="stars" id="stars"></div>
-
-<!-- Petal canvas -->
 <canvas id="petal-canvas"></canvas>
 
 <div class="page">
@@ -260,60 +308,84 @@
   <div class="header-card">
     <div class="emoji-row">🌸 🎀 🌸</div>
     <h1>Happy Birthday,<br/>Meri Pukulu!</h1>
-    <div class="subtitle">✨ God bless you with all your heart desires! ✨</div>
+    <div class="subtitle">✨ God Bless You Forever!✨</div>
+  </div>
+
+  <!-- Envelope -->
+  <div class="envelope-section">
+    <div class="envelope-wrap" id="envelope">
+
+      <!-- SVG envelope body -->
+      <svg class="env-svg" viewBox="0 0 380 240" xmlns="http://www.w3.org/2000/svg">
+        <!-- back body -->
+        <rect x="0" y="20" width="380" height="220" rx="10" fill="#f7c5d8"/>
+        <!-- bottom left triangle -->
+        <polygon points="0,240 190,130 0,20" fill="#fce4ef"/>
+        <!-- bottom right triangle -->
+        <polygon points="380,240 190,130 380,20" fill="#fad0e4"/>
+        <!-- bottom center fold -->
+        <polygon points="0,240 380,240 190,130" fill="#f9b8d0"/>
+        <!-- flap -->
+        <g class="env-flap-group" id="env-flap">
+          <polygon points="0,20 380,20 190,130" fill="#f9a8c9"/>
+        </g>
+      </svg>
+
+      <!-- Letter peeking -->
+      <div class="env-letter-peek">💌</div>
+
+      <!-- Heart seal -->
+      <div class="env-seal" onclick="openEnvelope()">♥</div>
+
+    </div>
+
+    <button class="open-btn" id="open-btn" onclick="openEnvelope()">Open Me 💌</button>
   </div>
 
   <!-- Message -->
-  <div class="message-card">
-    
+  <div class="message-card" id="message-card">
     <p>
-      Last year yasti jasto lagxa malai timi sanga vetera kurya garya, tyo din khai k topic bata kura ayo ani maile mero birthday chaitra ma 
-      ho vaneko thiye ani kun din vanda 28, april 11 vanda huh hamro ta birthday ni same same din jastai vako thiyo yaad cha timlai ? Tya dekhi aile samma 
-      auda katti kura change vako cha so fast yet so slow at the same time. 
+      Last year yasti jasto lagxa malai timi sanga vetera kurya garya — tyo din khai k topic bata kura ayo
+      ani maile mero birthday chaitra ma ho vaneko thiye ani kun din vanda 28, April 11 vanda huh. Hamro ta
+      birthday ni same same din jastai vako thiyo, yaad cha timlai? Tya dekhi aile samma auda katti kura
+      change vako cha — so fast yet so slow at the same time. I wish sadai birthday wish garna pairakham and to be forever with you baby!🌙
     </p>
     <div class="heart-divider">♥ ♥ ♥</div>
     <p>
-      Baby, I love you so much and I am so grateful that you happenend in my life at a random moment and made it a roller coster ride of 
-      happiness, love, support, sometimes conflicts sometimes silence sometimes innerworks but at the end of the day 
-      we are still here together and I am happy about this. Though, we did not encounter each other as our first love, I want us to make it happen 
-      as our forever from now onwards. I want to be the one who is there for you in every moment of your life,
-      the one who makes you smile when you are down, the one who supports you in every decision you make, 
-      the one who loves you unconditionally and the one who grows old with you. I want to unlearn many things and relearn things so that I could
-      be the that person who can understand you as well as me in this relationship baby!. Miles apart but still you are 
-      the one who is always in my thought, heart and mind. 
+      Baby, I love you so much and I am so grateful that you happened in my life at a random moment and made
+      it a roller coaster ride of happiness, love, support — sometimes conflicts, sometimes silence, sometimes
+      inner works — but at the end of the day we are still here together, and I am happy about this. 💝
+      <br/><br/>
+      Though we did not encounter each other as our first love, I want us to make it happen as our forever
+      from now onwards. I want to be the one who is there for you in every moment of your life — the one who
+      makes you smile when you are down, the one who supports you in every decision you make, the one who
+      loves you unconditionally, and the one who grows old with you.
+      <br/><br/>
+      I want to unlearn many things and relearn things so that I could be that person who can understand you
+      as well as me in this relationship, baby! Miles apart, but still you are the one who is always in my
+      thought, heart and mind. 🌍💫
     </p>
     <div class="heart-divider">♥ ♥ ♥</div>
-    <p>
-      <p>
-पुकुलु मेरी प्यारी खूब खास बनेकी छेउ। <br>  
-सात समुन्द्र पारि बाटनी मेरो सास बनेकी छेउ। <br>
-मेरा हरेक दिनका पलहरुको  याद बनेकी छेउ।  <br>
-प्रेमिका बनेर मेरी  तिमी जीवनका  पन्नाहरुमा  ज्ञात बनेकी छेउ।। <br><br> 
-
-भएबित हुन्छु कैलेकाइ   कतै छुट्छकि साथ।<br>   
-पुस्पन र  पलव्हन गर्दै यो  हाम्रो  प्रेम  समाउन  मेरो  हात।<br>  
-प्रतिक्ष्या गरिरहेछु  तिम्रो  त्यो  न्यानो  अङ्गालॊको  हरघडी। <br>
-मेरो हो भनि हक जताउन अनि मेरी  हो  भनेर हक   जताउन  के  हुन्छौ  अन्तिम  सम्म  मेरी कनमडी ?
-      </p>
-      </p>
-    <div class="heart-divider">♥ ♥ ♥</div>
-    <p>
-      Wishing you the most magical birthday —<br/>
-      you deserve every wonderful thing, <em>-Sisimanu(though I like FuchuKuchu, mayalu, bebi)</em>.
+    <p class="poem">
+      पुकुलु मेरी प्यारी खूब खास बनेकी छेउ। <br/>
+      सात समुन्द्र पारि बाटनी मेरो सास बनेकी छेउ। <br/>
+      मेरा हरेक दिनका पलहरुको याद बनेकी छेउ। <br/>
+      प्रेमिका बनेर मेरी तिमी जीवनका पन्नाहरुमा ज्ञात बनेकी छेउ।। <br/><br/>
+      भएबित हुन्छु कैलेकाइ कतै छुट्छकि साथ। <br/>
+      पुस्पन र पलव्हन गर्दै यो हाम्रो प्रेम समाउन मेरो हात। <br/>
+      प्रतिक्ष्या गरिरहेछु तिम्रो त्यो न्यानो अङ्गालॊको हरघडी। <br/>
+      मेरो हो भनि हक जताउन अनि मेरी हो भनेर हक जताउन <br/>
+      के हुन्छौ अन्तिम सम्म मेरी कनमडी? 🌹
     </p>
   </div>
 
-
-
-  <!-- Bouncing cake -->
+  <!-- Cake -->
   <div class="cake-section">
     <div class="cake-emoji">🎂</div>
-    <div class="cake-label">May all your wishes come true Pukulu!</div>
+    <div class="cake-label">Make a wish!</div>
   </div>
 
-
-
-  <div class="footer">made with 🤍 just for you</div>
+  <div class="footer">made with 💖 just for you</div>
 
 </div>
 
@@ -338,29 +410,23 @@
   /* ── Falling petals ── */
   const canvas = document.getElementById('petal-canvas');
   const ctx = canvas.getContext('2d');
-
-  function resize() {
-    canvas.width  = window.innerWidth;
-    canvas.height = window.innerHeight;
-  }
+  function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
   resize();
   window.addEventListener('resize', resize);
 
-  const PETAL_EMOJIS = ['🌸','🌺','🌷','💮','🌼','✿','❀'];
-  const PETAL_COUNT  = 28;
+  const PETALS = ['🌸','🌺','🌷','💮','🌼'];
+  const petals = Array.from({ length: 28 }, () => spawnPetal(true));
 
-  const petals = Array.from({ length: PETAL_COUNT }, () => spawnPetal(true));
-
-  function spawnPetal(randomY = false) {
+  function spawnPetal(rand) {
     return {
-      x:     Math.random() * window.innerWidth,
-      y:     randomY ? Math.random() * window.innerHeight : -30,
-      size:  Math.random() * 18 + 12,
+      x: Math.random() * window.innerWidth,
+      y: rand ? Math.random() * window.innerHeight : -30,
+      size: Math.random() * 18 + 12,
       speed: Math.random() * 1.2 + 0.6,
       drift: (Math.random() - 0.5) * 0.8,
-      rot:   Math.random() * Math.PI * 2,
+      rot: Math.random() * Math.PI * 2,
       rotSpeed: (Math.random() - 0.5) * 0.06,
-      emoji: PETAL_EMOJIS[Math.floor(Math.random() * PETAL_EMOJIS.length)],
+      emoji: PETALS[Math.floor(Math.random() * PETALS.length)],
       opacity: Math.random() * 0.5 + 0.45,
     };
   }
@@ -377,16 +443,35 @@
       ctx.textBaseline = 'middle';
       ctx.fillText(p.emoji, 0, 0);
       ctx.restore();
-
-      p.y   += p.speed;
-      p.x   += p.drift + Math.sin(p.y * 0.018) * 0.5;
+      p.y += p.speed;
+      p.x += p.drift + Math.sin(p.y * 0.018) * 0.5;
       p.rot += p.rotSpeed;
-
       if (p.y > window.innerHeight + 40) Object.assign(p, spawnPetal(false));
     });
     requestAnimationFrame(draw);
   }
   draw();
+
+  /* ── Envelope open ── */
+  let opened = false;
+  function openEnvelope() {
+    if (opened) return;
+    opened = true;
+
+    document.getElementById('envelope').classList.add('open');
+    document.getElementById('open-btn').classList.add('hidden');
+
+    const msg = document.getElementById('message-card');
+    setTimeout(() => {
+      msg.style.display = 'block';
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          msg.classList.add('show');
+          setTimeout(() => msg.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+        });
+      });
+    }, 1000);
+  }
 </script>
 </body>
 </html>
